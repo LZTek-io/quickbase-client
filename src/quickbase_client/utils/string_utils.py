@@ -41,6 +41,12 @@ def make_var_name(s: str, case='snake', number_strategy='drop'):
 
     # do the actual conversion and handle leading numbers
     v = case_func(s)
+    if len(v) == 0:
+        print("Unable to coerce {} to a viable name.".format(s_orig))
+        return make_var_name(
+                input("Please give a name: "),
+                case=case,
+                number_strategy=number_strategy)
     v = _number_map[number_strategy](v) if v[0].isnumeric() else v
 
     if v[0] == '_' and number_strategy != 'underscore':

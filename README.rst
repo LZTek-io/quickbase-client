@@ -137,15 +137,28 @@ You can use the methods exposed in the ``quickbase_client.query`` module like so
     from quickbase_client.query import and_
 
     schema = GitHubIssue.schema
+    # set conditions for the query
     q = and_(
         eq_(schema.date_opened, schema.date_created),
         on_or_before_(schema.date_closed, date(2020, 11, 16))
     )
     print(q.where)  # ({'9'.EX.'_FID_1'}AND{'10'.OBF.'11-16-2020'})
+    # define which fields to get in the call. If no fields are specified, then the default
+    # fields for the table (configured in quickbase) are returned
+    select = [
+        schema.title.fid,
+        schema.description.fid,
+        schema.issure_url
+    ]
+    q.select = select
+    print(select) # [6, 7, 13]
     recs = client.query(q)  # recs will be GitHubIssue objects unless passing raw=True
     print([str(r) for r in recs])  # ['<GitHubIssue title="Made And Closed Today" id="10000">']
 
 
+You can also add other options to your query in a similar manner. 
+
+.. foo-bar::
 
 Controlling Lower-Level API Calls
 ---------------------------------
